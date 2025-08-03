@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Kesehatan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00a8e8;
+            --secondary: #0077b6;
+            --accent: #ff6b6b;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.7;
+            color: var(--dark);
+            background-color: #f5f7fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            flex: 1;
+        }
+        
+        h1 {
+            color: var(--secondary);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        
+        @media (min-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .calculator {
+            background-color: var(--light);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .calculator h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+        
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #ff5252;
+            transform: translateY(-2px);
+        }
+        
+        .result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 5px;
+            border-left: 4px solid var(--primary);
+            display: none;
+        }
+        
+        .result h3 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .bmi-scale {
+            margin-top: 1rem;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            height: 20px;
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        .bmi-indicator {
+            position: absolute;
+            top: -10px;
+            width: 2px;
+            height: 40px;
+            background-color: var(--dark);
+        }
+        
+        .bmi-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        .tips {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            background-color: #e3f2fd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            margin-top: auto;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-col h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--accent);
+        }
+
+        .footer-col p {
+            margin-bottom: 1rem;
+            color: #adb5bd;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-col ul li a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-col ul li a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #adb5bd;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-col h3::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-calculator"></i> Kalkulator Kesehatan</h1>
+        
+        <div class="calculator-container">
+            <!-- Kalkulator BMI -->
+            <div class="calculator">
+                <h2><i class="fas fa-weight"></i> Kalkulator BMI</h2>
+                <div class="input-group">
+                    <label for="bmiWeight">Berat Badan (kg)</label>
+                    <input type="number" id="bmiWeight" placeholder="Contoh: 65" step="0.1" min="20" max="200">
+                </div>
+                <div class="input-group">
+                    <label for="bmiHeight">Tinggi Badan (cm)</label>
+                    <input type="number" id="bmiHeight" placeholder="Contoh: 170" min="100" max="250">
+                </div>
+                <button onclick="calculateBMI()">Hitung BMI</button>
+                
+                <div class="result" id="bmiResult">
+                    <h3>Hasil BMI Anda: <span id="bmiValue">0</span></h3>
+                    <p>Kategori: <strong id="bmiCategory">-</strong></p>
+                    
+                    <div class="bmi-scale">
+                        <div class="bmi-indicator" id="bmiIndicator"></div>
+                    </div>
+                    <div class="bmi-labels">
+                        <span>Kurus (<18.5)</span>
+                        <span>Normal (18.5-24.9)</span>
+                        <span>Gemuk (25-29.9)</span>
+                        <span>Obesitas (≥30)</span>
+                    </div>
+                    
+                    <div class="tips" id="bmiTips"></div>
+                </div>
+            </div>
+            
+            <!-- Kalkulator Kalori -->
+            <div class="calculator">
+                <h2><i class="fas fa-fire"></i> Kebutuhan Kalori</h2>
+                <div class="input-group">
+                    <label for="calorieGender">Jenis Kelamin</label>
+                    <select id="calorieGender">
+                        <option value="male">Laki-laki</option>
+                        <option value="female">Perempuan</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="calorieAge">Usia (tahun)</label>
+                    <input type="number" id="calorieAge" placeholder="Contoh: 25" min="10" max="120">
+                </div>
+                <div class="input-group">
+                    <label for="calorieWeight">Berat Badan (kg)</label>
+                    <input type="number" id="calorieWeight" placeholder="Contoh: 65" step="0.1" min="20" max="200">
+                </div>
+                <div class="input-group">
+                    <label for="calorieHeight">Tinggi Badan (cm)</label>
+                    <input type="number" id="calorieHeight" placeholder="Contoh: 170" min="100" max="250">
+                </div>
+                <div class="input-group">
+                    <label for="calorieActivity">Aktivitas Fisik</label>
+                    <select id="calorieActivity">
+                        <option value="1.2">Sedentary (minimal aktivitas)</option>
+                        <option value="1.375">Ringan (olahraga 1-3x/minggu)</option>
+                        <option value="1.55">Moderat (olahraga 3-5x/minggu)</option>
+                        <option value="1.725">Aktif (olahraga 6-7x/minggu)</option>
+                        <option value="1.9">Sangat aktif (olahraga berat setiap hari)</option>
+                    </select>
+                </div>
+                <button onclick="calculateCalories()">Hitung Kebutuhan Kalori</button>
+                
+                <div class="result" id="calorieResult">
+                    <h3>Kebutuhan Kalori Harian</h3>
+                    <p>Untuk mempertahankan berat badan: <strong id="maintenanceCalories">0</strong> kalori/hari</p>
+                    <p>Untuk menurunkan berat badan: <strong id="lossCalories">0</strong> kalori/hari</p>
+                    <p>Untuk menambah berat badan: <strong id="gainCalories">0</strong> kalori/hari</p>
+                    
+                    <div class="tips">
+                        <p><i class="fas fa-lightbulb"></i> <strong>Tip:</strong> Untuk menurunkan berat badan, kurangi 500 kalori dari kebutuhan harian. Untuk menambah berat badan, tambah 500 kalori.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+        <div class="copyright">
+            <p>&copy; 2023 Kalkulator Kesehatan. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Fungsi untuk menghitung BMI
+        function calculateBMI() {
+            const weight = parseFloat(document.getElementById('bmiWeight').value);
+            const height = parseFloat(document.getElementById('bmiHeight').value) / 100; // Convert cm to m
+            
+            if (!weight || !height || height <= 0 || weight <= 0) {
+                alert('Harap masukkan berat dan tinggi badan yang valid!');
+                return;
+            }
+            
+            const bmi = (weight / (height * height)).toFixed(1);
+            let category = '';
+            let tips = '';
+            let indicatorPosition = 0;
+            
+            if (bmi < 18.5) {
+                category = 'Kurus';
+                tips = 'Tips: Konsumsi makanan bergizi tinggi kalori, latihan kekuatan untuk membangun otot.';
+                indicatorPosition = (bmi / 40) * 100; // Skala sampai 40 untuk obesitas ekstrim
+            } else if (bmi >= 18.5 && bmi < 25) {
+                category = 'Normal (Sehat)';
+                tips = 'Tips: Pertahankan pola makan sehat dan rutin berolahraga.';
+                indicatorPosition = 18.5/40 * 100 + ((bmi - 18.5) / (25 - 18.5)) * 25;
+            } else if (bmi >= 25 && bmi < 30) {
+                category = 'Gemuk (Overweight)';
+                tips = 'Tips: Kurangi asupan kalori, tingkatkan aktivitas fisik, fokus pada makanan tinggi serat.';
+                indicatorPosition = 25/40 * 100 + ((bmi - 25) / (30 - 25)) * 25;
+            } else {
+                category = 'Obesitas';
+                tips = 'Tips: Konsultasikan dengan dokter atau ahli gizi untuk program penurunan berat badan yang aman.';
+                indicatorPosition = 30/40 * 100 + ((bmi - 30) / 10) * 10;
+            }
+            
+            // Tampilkan hasil
+            document.getElementById('bmiValue').textContent = bmi;
+            document.getElementById('bmiCategory').textContent = category;
+            document.getElementById('bmiTips').innerHTML = tips;
+            document.getElementById('bmiIndicator').style.left = `${indicatorPosition}%`;
+            document.getElementById('bmiResult').style.display = 'block';
+        }
+        
+        // Fungsi untuk menghitung kebutuhan kalori
+        function calculateCalories() {
+            const gender = document.getElementById('calorieGender').value;
+            const age = parseInt(document.getElementById('calorieAge').value);
+            const weight = parseFloat(document.getElementById('calorieWeight').value);
+            const height = parseFloat(document.getElementById('calorieHeight').value);
+            const activity = parseFloat(document.getElementById('calorieActivity').value);
+            
+            if (!age || !weight || !height || age <= 0 || weight <= 0 || height <= 0) {
+                alert('Harap masukkan data yang valid!');
+                return;
+            }
+            
+            // Rumus Harris-Benedict
+            let bmr;
+            if (gender === 'male') {
+                bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+            } else {
+                bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+            }
+            
+            const calories = Math.round(bmr * activity);
+            
+            // Tampilkan hasil
+            document.getElementById('maintenanceCalories').textContent = calories;
+            document.getElementById('lossCalories').textContent = calories - 500;
+            document.getElementById('gainCalories').textContent = calories + 500;
+            document.getElementById('calorieResult').style.display = 'block';
+        }
+        
+        // Event listeners untuk tombol Enter
+        document.getElementById('bmiWeight').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') calculateBMI();
+        });
+        
+        document.getElementById('bmiHeight').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') calculateBMI();
+        });
+        
+        document.getElementById('calorieAge').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') calculateCalories();
+        });
+    </script>
+</body>
+</html>
